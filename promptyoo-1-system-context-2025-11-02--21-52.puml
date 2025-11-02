@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title System Context View: Promptyoo-1 AI Prompt Optimizer
+
+Person(user, "Individual User", "A person who wants to improve AI prompts for better results.")
+
+System(promptyoo1, "Promptyoo-1 Web Application", "A Next.js full-stack application that optimizes user prompts using AI, manages user authentication, and stores optimization history.")
+
+System_Ext(deepseekAPI, "DeepSeek API", "Cloud-based AI service that provides intelligent prompt optimization with streaming responses.")
+
+System_Ext(browserLocalStorage, "Browser Local Storage", "Browser-based storage for user authentication data, optimization history, and user preferences.")
+
+System_Ext(browserCookieStorage, "Browser Cookie Storage", "Browser-based storage for HTTP-only session cookies that link to server-side API key storage.")
+
+Rel(user, promptyoo1, "Submits prompts for optimization and manages history using")
+Rel(promptyoo1, deepseekAPI, "Sends prompts for AI-powered optimization using (falls back to basic mode if unavailable)")
+Rel(deepseekAPI, promptyoo1, "Returns optimized prompts via streaming response to")
+Rel(promptyoo1, browserLocalStorage, "Stores and retrieves user authentication and optimization history in")
+Rel(promptyoo1, browserCookieStorage, "Stores and retrieves session IDs for API key management in")
+
+@enduml
