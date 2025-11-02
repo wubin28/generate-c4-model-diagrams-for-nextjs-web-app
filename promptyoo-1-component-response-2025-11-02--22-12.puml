@@ -1,0 +1,50 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Component View: Promptyoo-1 - Response Flow
+
+Person(user, "User", "A person who wants to optimize AI prompts")
+
+Container_Boundary(frontend, "Frontend", "Next.js App Router") {
+    Component(promptOptimizer, "PromptOptimizer", "Component: React Component", "Handles user input and displays optimization results")
+
+    Component(useOptimizer, "useOptimizer", "Component: React Custom Hook", "Contains optimization business logic with streaming support")
+
+    Component(useApiKey, "useApiKey", "Component: React Custom Hook", "Manages API key state and operations")
+
+    Component(useHistory, "useHistory", "Component: React Custom Hook", "Manages optimization history operations")
+
+    Component(historyProvider, "HistoryProvider", "Component: React Context Provider", "Provides history state and operations to child components")
+
+    Component(authProvider, "AuthProvider", "Component: React Context Provider", "Provides authentication state and user information")
+
+    Component(sidebar, "Sidebar", "Component: React Component", "Displays history items and user profile")
+}
+
+Container_Boundary(backend, "Backend", "Next.js Server") {
+    Component(apiRoute, "API Route (/api/api-key)", "Component: Next.js API Route", "Handles API key storage, retrieval, and deletion")
+
+    Component(sessionStore, "Session Store", "Component: In-Memory Map", "Stores API keys linked to session IDs")
+}
+
+System_Ext(deepseekApi, "DeepSeek API", "System: Cloud AI Service", "Provides intelligent prompt optimization with streaming responses")
+
+System_Ext(browserLocalStorage, "Browser localStorage", "System: Browser Storage", "Stores user authentication and optimization history")
+
+System_Ext(browserCookieStorage, "Browser Cookie Storage", "System: Browser Storage", "Stores HTTP-only session cookies")
+
+Rel(deepseekApi, useOptimizer, "1. Streams response chunks", "SSE data: {delta: {content: '...'}}")
+Rel(useOptimizer, promptOptimizer, "2. Calls onStreamUpdate callback with accumulated content")
+Rel(promptOptimizer, promptOptimizer, "3. Updates UI state with partial result", "setOptimizedPrompt(chunk)")
+Rel(useOptimizer, promptOptimizer, "4. Returns complete optimized prompt")
+Rel(promptOptimizer, useHistory, "5. Calls addHistory with optimization record")
+Rel(useHistory, historyProvider, "6. Adds new history item to state")
+Rel(historyProvider, authProvider, "7. Requests current user ID for storage key")
+Rel(authProvider, historyProvider, "8. Provides user ID or null")
+Rel(historyProvider, browserLocalStorage, "9. Saves history with user-specific key", "promptyoo-history-{userId} or promptyoo-history")
+Rel(historyProvider, sidebar, "10. Triggers history list update via context")
+Rel(sidebar, sidebar, "11. Renders updated history item at top of list")
+
+@enduml

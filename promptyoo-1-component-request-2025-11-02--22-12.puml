@@ -1,0 +1,53 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Component View: Promptyoo-1 - Request Flow
+
+Person(user, "User", "A person who wants to optimize AI prompts")
+
+Container_Boundary(frontend, "Frontend", "Next.js App Router") {
+    Component(promptOptimizer, "PromptOptimizer", "Component: React Component", "Handles user input and displays optimization results")
+
+    Component(useOptimizer, "useOptimizer", "Component: React Custom Hook", "Contains optimization business logic with streaming support")
+
+    Component(useApiKey, "useApiKey", "Component: React Custom Hook", "Manages API key state and operations")
+
+    Component(useHistory, "useHistory", "Component: React Custom Hook", "Manages optimization history operations")
+
+    Component(historyProvider, "HistoryProvider", "Component: React Context Provider", "Provides history state and operations to child components")
+
+    Component(authProvider, "AuthProvider", "Component: React Context Provider", "Provides authentication state and user information")
+
+    Component(sidebar, "Sidebar", "Component: React Component", "Displays history items and user profile")
+}
+
+Container_Boundary(backend, "Backend", "Next.js Server") {
+    Component(apiRoute, "API Route (/api/api-key)", "Component: Next.js API Route", "Handles API key storage, retrieval, and deletion")
+
+    Component(sessionStore, "Session Store", "Component: In-Memory Map", "Stores API keys linked to session IDs")
+}
+
+System_Ext(deepseekApi, "DeepSeek API", "System: Cloud AI Service", "Provides intelligent prompt optimization with streaming responses")
+
+System_Ext(browserLocalStorage, "Browser localStorage", "System: Browser Storage", "Stores user authentication and optimization history")
+
+System_Ext(browserCookieStorage, "Browser Cookie Storage", "System: Browser Storage", "Stores HTTP-only session cookies")
+
+Rel(user, promptOptimizer, "1. Submits original prompt for optimization")
+Rel(promptOptimizer, useApiKey, "2. Requests API key for optimization")
+Rel(useApiKey, apiRoute, "3. Retrieves API key", "GET /api/api-key")
+Rel(apiRoute, sessionStore, "4. Looks up session data by cookie")
+Rel(sessionStore, apiRoute, "5. Returns API key if exists")
+Rel(apiRoute, browserCookieStorage, "6. Validates session cookie")
+Rel(browserCookieStorage, apiRoute, "7. Provides session ID")
+Rel(apiRoute, useApiKey, "8. Returns API key")
+Rel(useApiKey, promptOptimizer, "9. Provides API key for optimization")
+Rel(promptOptimizer, useOptimizer, "10. Calls optimizePrompt with user input and API key")
+Rel(useOptimizer, deepseekApi, "11. Sends prompt with system instructions", "POST /v1/chat/completions with stream=true")
+Rel(deepseekApi, useOptimizer, "12. Streams optimized prompt chunks", "Server-Sent Events (SSE)")
+Rel(useOptimizer, useOptimizer, "13. If DeepSeek API fails (network error / invalid API key / service busy)", "Falls back to basic optimization mode")
+Rel(useOptimizer, promptOptimizer, "14. Returns basic optimized prompt", "你是专家。{prompt}。请提供主要观点的网页链接...")
+
+@enduml
