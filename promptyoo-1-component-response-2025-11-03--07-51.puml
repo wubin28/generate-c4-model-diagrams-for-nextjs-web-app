@@ -8,25 +8,25 @@ title Component View: Promptyoo-1 - Response Flow
 Person(user, "User", "A person who wants to optimize AI prompts")
 
 Container_Boundary(frontend, "Frontend", "Next.js App Router") {
-    Component(promptOptimizer, "PromptOptimizer", "Component: React Component", "Handles user input and displays optimization results")
+    Component(promptOptimizer, "PromptOptimizer", "Component: React Component", "Handles user input and displays optimization results\\n\\nPath: components/features/prompt-optimizer.tsx")
 
-    Component(useOptimizer, "useOptimizer", "Component: React Custom Hook", "Contains optimization business logic with streaming support")
+    Component(useOptimizer, "useOptimizer", "Component: React Custom Hook", "Contains optimization business logic with streaming support\\n\\nPath: hooks/use-optimizer.ts")
 
-    Component(useApiKey, "useApiKey", "Component: React Custom Hook", "Manages API key state and operations")
+    Component(useApiKey, "useApiKey", "Component: React Custom Hook", "Manages API key state and operations\\n\\nPath: hooks/use-api-key.ts")
 
-    Component(useHistory, "useHistory", "Component: React Custom Hook", "Manages optimization history operations")
+    Component(useHistory, "useHistory", "Component: React Custom Hook", "Manages optimization history operations\\n\\nPath: hooks/use-history.ts")
 
-    Component(historyProvider, "HistoryProvider", "Component: React Context Provider", "Provides history state and operations to child components")
+    Component(historyProvider, "HistoryProvider", "Component: React Context Provider", "Provides history state and operations to child components\\n\\nPath: components/providers/history-provider.tsx")
 
-    Component(authProvider, "AuthProvider", "Component: React Context Provider", "Provides authentication state and user information")
+    Component(authProvider, "AuthProvider", "Component: React Context Provider", "Provides authentication state and user information\\n\\nPath: components/providers/auth-provider.tsx")
 
-    Component(sidebar, "Sidebar", "Component: React Component", "Displays history items and user profile")
+    Component(sidebar, "Sidebar", "Component: React Component", "Displays history items and user profile\\n\\nPath: components/layouts/sidebar.tsx")
 }
 
 Container_Boundary(backend, "Backend", "Next.js Server") {
-    Component(apiRoute, "API Route (/api/api-key)", "Component: Next.js API Route", "Handles API key storage, retrieval, and deletion")
+    Component(apiRoute, "API Route (/api/api-key)", "Component: Next.js API Route", "Handles API key storage, retrieval, and deletion\\n\\nPath: app/api/api-key/route.ts")
 
-    Component(sessionStore, "Session Store", "Component: In-Memory Map", "Stores API keys linked to session IDs")
+    Component(sessionStore, "Session Store", "Component: In-Memory Map", "Stores API keys linked to session IDs\\n\\nPath: app/api/api-key/route.ts:5")
 }
 
 System_Ext(deepseekApi, "DeepSeek API", "System: Cloud AI Service", "Provides intelligent prompt optimization with streaming responses")
